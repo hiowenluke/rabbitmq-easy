@@ -4,11 +4,34 @@
 An easy to use RabbitMQ library for [Node.js](https://nodejs.org).
 
 
-## Demo
+## Install
+
+```bash
+npm install rabbitmq-easy --save
+```
+
+## Quick Start
+
+### Install RabbitMQ With Docker
+
+Please "[Install Docker](https://docs.docker.com/v17.09/engine/installation/#supported-platforms)" first (**Docker CE** recommended). Then do the following.
+
+```bash
+## Install RabbitMQ 
+docker pull rabbitmq:management
+
+## Start RabbitMQ
+docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
+```
+
+Login to Management of RabbitMQ:
+1. Visit `http://localhost:15672/` in your browser.
+2. Username/password: `guest/guest`.
+
+
+### Use RabbitMQ
 
 **send.js**
-
-Send messages to RabbitMQ.
 
 ```js
 const rabbitMQ = require('rabbitmq-easy');
@@ -25,7 +48,6 @@ main();
 
 **receive.js**
 
-Receive messages from RabbitMQ.
 ```js
 const rabbitMQ = require('rabbitmq-easy');
 const queue = 'q1'; // Name queue as "q1"
