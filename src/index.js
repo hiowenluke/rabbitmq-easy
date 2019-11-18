@@ -76,13 +76,34 @@ const main = {
 	},
 
 	init(queue, host, options) {
-		this.queue = queue;
+		queue && (this.queue = queue);
 		host && (this.host = host);
 		options && Object.assign(this.options, options);
 	},
 
-	async send(message) {
-		const {host, queue, options} = this;
+	parseArgs(queue, anotherArg) {
+
+		// send()
+		if (!queue) {
+			throw new Error('Wrong arguments');
+		}
+
+		// send('hi')
+		if (!anotherArg) {
+			anotherArg = queue;
+			queue = this.queue;
+		}
+		else {
+			// send('queue', 'hi')
+			// do nothing
+		}
+
+		return [queue, anotherArg];
+	},
+
+	async send(queue, message) {
+		([queue, message] = this.parseArgs(queue, message));
+		const {host, options} = this;
 
 		try {
 			const channel = await connect.do(host, queue);
@@ -94,8 +115,9 @@ const main = {
 		}
 	},
 
-	async receive(handler) {
-		const {host, queue} = this;
+	async receive(queue, handler) {
+		([queue, handler] = this.parseArgs(queue, handler));
+		const {host} = this;
 
 		try {
 			const channel = await connect.do(host, queue);
@@ -113,18 +135,24 @@ const main = {
 
 const create = (queue, host, options) => {
 
-	// init({queue, host, options})
+	// create()
+	if (!queue) {
+		// do nothing
+	}
+	else
+
+	// create({queue, host, options})
 	if (typeof queue === 'object') {
 		({queue, host, options} = queue);
 	}
 	else {
-		// init(queue, options)
+		// create(queue, options)
 		if (typeof host === 'object') {
 			options = host;
 			host = null;
 		}
 		else {
-			// init(queue, host, ...)
+			// create(queue, host, ...)
 			// do nothing
 		}
 	}
