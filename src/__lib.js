@@ -34,7 +34,7 @@ const me = {
 	init(obj, queue, host, options) {
 		obj.queue = queue || config.queue;
 		obj.host = host || config.host;
-		Object.assign(obj.options, config.options, options);
+		obj.options = Object.assign({}, config.options, options);
 	},
 };
 
