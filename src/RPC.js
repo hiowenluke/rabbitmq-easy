@@ -4,6 +4,8 @@ const uuid = require('uuid');
 const connect = require('./connect');
 const lib = require('./__lib');
 
+const UNDEFINED = '__undefined__';
+
 const me = {
 	host: 'localhost',
 	queue: 'rpc-default',
@@ -30,8 +32,8 @@ const me = {
 
 				channel.consume(q, (msg) => {
 					if (msg.properties.correlationId === corrId) {
-						const message = msg.content.toString();
-						resolve(JSON.parse(message));
+						const result = msg.content.toString();
+						resolve(result === UNDEFINED ? undefined : JSON.parse(result));
 					}
 
 				}, {noAck: true});
@@ -63,11 +65,26 @@ const me = {
 			return channel.consume(queue, async (msg) => {
 				const message = msg.content.toString();
 				const args = JSON.parse(message);
-				const result = await handler(...args);
+
+				let result = await handler(...args);
+
+				const type = typeof result;
+				const invalidTypes = ['function', 'date'];
+
+				if (type === 'undefined') {
+					result = UNDEFINED;
+				}
+				else
+				if (invalidTypes.indexOf(type) >= 0) {
+					result = "{}";
+				}
+				else {
+					result = JSON.stringify(result);
+				}
 
 				channel.sendToQueue(
 					msg.properties.replyTo,
-					Buffer.from(JSON.stringify(result)),
+					Buffer.from(result),
 					{correlationId: msg.properties.correlationId}
 				);
 
