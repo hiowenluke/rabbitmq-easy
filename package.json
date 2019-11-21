@@ -1,6 +1,6 @@
 {
   "name": "rabbitmq-easy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "An easy to use RabbitMQ library for Node.js",
   "main": "index.js",
   "scripts": {
