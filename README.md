@@ -1,7 +1,7 @@
 
 # RabbitMQ Easy
 
-An easy to use RabbitMQ library for [Node.js](https://nodejs.org).
+An easy to use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC (simpler then gRPC, consul, etc.).
 
 
 ## Install
@@ -29,29 +29,14 @@ Login to Management of RabbitMQ:
 2. Username/password: `guest/guest`.
 
 
-### Use RabbitMQ
-
-**send.js**
-
-```js
-const rabbitMQ = require('rabbitmq-easy');
-const queue = 'q1'; // Name queue as "q1"
-const mq = rabbitMQ(queue); // Create a message queue
-
-const main = async () => {
-    // Send a message to queue "q1" in RabbitMQ
-    await mq.send('hello world');
-};
-
-main();
-```
+### Use as MQ
 
 **receive.js**
 
 ```js
-const rabbitMQ = require('rabbitmq-easy');
+const MQ = require('rabbitmq-easy').MQ;
 const queue = 'q1'; // Name queue as "q1"
-const mq = rabbitMQ(queue); // Create a message queue
+const mq = MQ(queue); // Create a message queue
 
 // Handle the message comes from queue "q1"
 const handler = async (message) => {
@@ -61,6 +46,59 @@ const handler = async (message) => {
 const main = async () => {
     // Receive messages comes from queue "q1" in RabbitMQ
     await mq.receive(handler);
+};
+
+main();
+```
+
+**send.js**
+
+```js
+const MQ = require('rabbitmq-easy').MQ;
+const queue = 'q1'; // Name queue as "q1"
+const mq = MQ(queue); // Create a message queue
+
+const main = async () => {
+    // Send a message to queue "q1" in RabbitMQ
+    await mq.send('hello world');
+};
+
+main();
+```
+
+### Use as RPC
+
+**server.js**
+
+```js
+const RPC = require('rabbitmq-easy').RPC;
+const rpc = RPC();
+
+const handler = async (a1, a2) => {
+	console.log(a1, a2); // hello world
+	return {a: 1};
+};
+
+const main = async () => {
+	
+	// If the "testFunc" is requested, then let handler to process it
+	await rpc.listen('testFunc', handler);
+};
+
+main();
+```
+
+**client.js**
+
+```js
+const RPC = require('rabbitmq-easy').RPC;
+const rpc = RPC();
+
+const main = async () => {
+	
+	// The "testFunc" is function name, the others are arguments passed to function "testFunc"
+	const result = await rpc.call('testFunc', 'hello', 'world');
+	console.log(result); // {a: 1}
 };
 
 main();
