@@ -1,6 +1,6 @@
 
 const amqp = require("amqplib");
-const waitTime = 10 * 1000;
+const config = require('./config');
 
 const channels = {
 	data: {},
@@ -64,7 +64,7 @@ const connect = {
 	redo(host, queue) {
 		setTimeout(async () => {
 			await this.do(host, queue);
-		}, waitTime);
+		}, config.waitTime);
 	}
 };
 
