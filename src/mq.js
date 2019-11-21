@@ -4,18 +4,11 @@ const lib = require('./__lib');
 
 const me = {
 	host: 'localhost',
-	queue: 'default',
+	queue: 'mq-default',
 
-	options: {
-		// When RabbitMQ restarts, these messages are saved to disk.
-		persistent: true,
-		durable: false,
-	},
-
-	init(queue, host, options) {
+	init(queue, host) {
 		this.queue = queue || this.queue;
 		this.host = host || this.host;
-		Object.assign(this.options, options);
 	},
 
 	parseArgs(queue, anotherArg) {
@@ -40,11 +33,11 @@ const me = {
 
 	async send(queue, message) {
 		([queue, message] = this.parseArgs(queue, message));
-		const {host, options} = this;
+		const {host} = this;
 
 		try {
-			const channel = await connect.do(host, queue, options);
-			channel.sendToQueue(queue, Buffer.from(message), options);
+			const channel = await connect.do(host, queue, {durable: false});
+			channel.sendToQueue(queue, Buffer.from(message), {persistent: true});
 			channel.close();
 		}
 		catch(err) {
@@ -55,10 +48,10 @@ const me = {
 
 	async receive(queue, handler) {
 		([queue, handler] = this.parseArgs(queue, handler));
-		const {host, options} = this;
+		const {host} = this;
 
 		try {
-			const channel = await connect.do(host, queue, options);
+			const channel = await connect.do(host, queue, {durable: false});
 			channel.consume(queue, async (msg) => {
 				await handler(msg.content.toString());
 				channel.ack(msg);
