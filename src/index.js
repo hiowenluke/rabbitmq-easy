@@ -1,4 +1,5 @@
 
 module.exports = {
-	MQ: require('./mq'),
+	MQ: require('./MQ'),
+	RPC: require('./RPC'),
 };

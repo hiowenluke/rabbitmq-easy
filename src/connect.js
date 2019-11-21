@@ -5,19 +5,19 @@ const config = require('./config');
 const channels = {
 	data: {},
 
-	async fetch(connection, host, queue) {
+	async fetch(connection, host, queue, options) {
 		const key = host + '|' + queue;
 
 		if (!this.data[key]) {
-			this.data[key] = await this.create(connection, queue);
+			this.data[key] = await this.create(connection, queue, options);
 		}
 
 		return this.data[key];
 	},
 
-	async create(connection, queue) {
+	async create(connection, queue, options) {
 		const channel = await connection.createChannel();
-		await channel.assertQueue(queue, {durable: false});
+		await channel.assertQueue(queue, options);
 		return channel;
 	}
 };
@@ -55,9 +55,9 @@ const connections = {
 };
 
 const connect = {
-	async do(host, queue) {
+	async do(host, queue, options) {
 		const connection = await connections.fetch(host, queue);
-		const channel = await channels.fetch(connection, host, queue);
+		const channel = await channels.fetch(connection, host, queue, options);
 		return channel;
 	},
 
