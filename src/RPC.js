@@ -13,7 +13,7 @@ const me = {
 		this.host = host || this.host;
 	},
 
-	async client(queue, ...args) {
+	async call(queue, ...args) {
 		const {host} = this;
 
 		try {
@@ -28,17 +28,17 @@ const me = {
 				const ok = await channel.assertQueue('', {exclusive: true});
 				const q = ok.queue;
 
-				channel.sendToQueue(queue, Buffer.from(JSON.stringify(args)), {
-					correlationId: corrId, replyTo: q
-				});
-
 				channel.consume(q, (msg) => {
 					if (msg.properties.correlationId === corrId) {
 						const message = msg.content.toString();
-						resolve(message);
+						resolve(JSON.parse(message));
 					}
 
 				}, {noAck: true});
+
+				channel.sendToQueue(queue, Buffer.from(JSON.stringify(args)), {
+					correlationId: corrId, replyTo: q
+				});
 			});
 		}
 		catch(err) {
@@ -47,7 +47,7 @@ const me = {
 		}
 	},
 
-	async server(queue, handler) {
+	async listen(queue, handler) {
 		const {host} = this;
 
 		try {
@@ -62,7 +62,8 @@ const me = {
 
 			return channel.consume(queue, async (msg) => {
 				const message = msg.content.toString();
-				const result = await handler(message);
+				const args = JSON.parse(message);
+				const result = await handler(...args);
 
 				channel.sendToQueue(
 					msg.properties.replyTo,
