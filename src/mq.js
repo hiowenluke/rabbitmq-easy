@@ -1,16 +1,9 @@
 
+const config = require('./config');
 const connect = require('./connect');
 const lib = require('./__lib');
 
 const me = {
-	host: 'localhost',
-	queue: 'default',
-
-	options: {
-		// When RabbitMQ restarts, these messages are saved to disk.
-		persistent: true //
-	},
-
 	init(queue, host, options) {
 		queue && (this.queue = queue);
 		host && (this.host = host);
