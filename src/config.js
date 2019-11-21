@@ -7,6 +7,8 @@ const me = {
 		// When RabbitMQ restarts, these messages are saved to disk.
 		persistent: true //
 	},
+
+	waitTime: 10 * 1000,
 };
 
 module.exports = me;
