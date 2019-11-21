@@ -10,6 +10,7 @@
   "author": "hi.owen.luke@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "^0.5.5"
+    "amqplib": "^0.5.5",
+    "uuid": "^3.3.3"
   }
 }
