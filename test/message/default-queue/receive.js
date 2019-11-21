@@ -1,6 +1,6 @@
 
-const rabbitMQ = require('../../src');
-const mq = rabbitMQ();
+const MQ = require('../../../src').MQ;
+const mq = MQ();
 
 const handler = async (message) => {
 	console.log(message);
@@ -8,7 +8,7 @@ const handler = async (message) => {
 
 const main = async () => {
 
-	// Tell rabbitmq to call handler when there is a new message
+	// Tell MQ to call handler when there is a new message
 	await mq.receive(handler);
 };
 

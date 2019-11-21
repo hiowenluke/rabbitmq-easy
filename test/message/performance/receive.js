@@ -1,9 +1,9 @@
 
 const check = require('./__check');
-const rabbitMQ = require('../../src');
+const MQ = require('../../../src').MQ;
 
 const queue = 'q2';
-const mq = rabbitMQ(queue);
+const mq = MQ(queue);
 
 let count = 0;
 

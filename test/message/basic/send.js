@@ -1,12 +1,12 @@
 
-const rabbitMQ = require('../../src');
+const MQ = require('../../../src').MQ;
 
 const queue = 'q1';
-const mq = rabbitMQ(queue);
+const mq = MQ(queue);
 
 const main = async () => {
 
-	// Tell rabbitmq to send a message
+	// Tell MQ to send a message
 	await mq.send('hello world');
 };
 
