@@ -8,8 +8,6 @@ const handler = async (a1, a2) => {
 };
 
 const main = async () => {
-
-	// Tell MQ to call handler when there is a new message
 	await rpc.listen('testFunc', handler);
 };
 
