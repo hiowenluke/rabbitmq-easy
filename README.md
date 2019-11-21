@@ -75,14 +75,14 @@ const RPC = require('rabbitmq-easy').RPC;
 const rpc = RPC();
 
 const handler = async (a1, a2) => {
-	console.log(a1, a2); // hello world
-	return {a: 1};
+    console.log(a1, a2); // hello world
+    return {a: 1};
 };
 
 const main = async () => {
-	
-	// If the "testFunc" is requested, then let handler to process it
-	await rpc.listen('testFunc', handler);
+    
+    // If the "testFunc" is requested, then let handler to process it
+    await rpc.listen('testFunc', handler);
 };
 
 main();
@@ -95,10 +95,10 @@ const RPC = require('rabbitmq-easy').RPC;
 const rpc = RPC();
 
 const main = async () => {
-	
-	// The "testFunc" is function name, the others are arguments passed to function "testFunc"
-	const result = await rpc.call('testFunc', 'hello', 'world');
-	console.log(result); // {a: 1}
+    
+    // The "testFunc" is function name, the others are arguments passed to function "testFunc"
+    const result = await rpc.call('testFunc', 'hello', 'world');
+    console.log(result); // {a: 1}
 };
 
 main();
