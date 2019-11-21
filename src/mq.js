@@ -1,13 +1,10 @@
 
-const config = require('./config');
 const connect = require('./connect');
 const lib = require('./__lib');
 
 const me = {
-	init(queue, host, options) {
-		queue && (this.queue = queue);
-		host && (this.host = host);
-		options && Object.assign(this.options, options);
+	init(...args) {
+		lib.init(this, ...args);
 	},
 
 	parseArgs(queue, anotherArg) {

@@ -1,4 +1,6 @@
 
+const config = require('./config');
+
 const me = {
 	create(obj, queue, host, options) {
 
@@ -27,7 +29,13 @@ const me = {
 		const inst = Object.create(obj);
 		inst.init(queue, host, options);
 		return inst;
-	}
+	},
+
+	init(obj, queue, host, options) {
+		obj.queue = queue || config.queue;
+		obj.host = host || config.host;
+		Object.assign(obj.options, config.options, options);
+	},
 };
 
 module.exports = me;
