@@ -37,7 +37,7 @@ const connections = {
 
 	async create(host, queue) {
 		const connection = await amqp.connect(`amqp://${host}`);
-		console.info(`connect to RabbitMQ ${host} success`);
+		// console.info(`connect to RabbitMQ ${host} success`);
 
 		process.once('SIGINT', () => {connection.close()});
 
@@ -47,7 +47,7 @@ const connections = {
 		});
 
 		connection.on("close", () => {
-			console.log(`connection to RabbitMQ ${host} closed`);
+			// console.log(`connection to RabbitMQ ${host} closed`);
 		});
 
 		return connection;
