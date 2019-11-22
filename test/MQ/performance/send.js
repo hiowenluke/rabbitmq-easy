@@ -1,5 +1,5 @@
 
-const check = require('./__check');
+const check = require('../../__lib/check');
 const MQ = require('../../../src').MQ;
 
 const queue = 'q2';
