@@ -5,7 +5,7 @@ const MQ = require('../../../src').MQ;
 const queue = 'q2';
 const mq = MQ(queue);
 
-const times = 100000;
+const maxTimes = 100000;
 let count = 0;
 
 const main = async () => {
@@ -15,9 +15,9 @@ const main = async () => {
 
 (async () => {
 	const counter = () => {return count};
-	check.start(counter);
+	check.start(counter, maxTimes);
 
-	for (let i = 0; i < times; i ++) {
+	for (let i = 0; i < maxTimes; i ++) {
 		await main();
 	}
 })();
