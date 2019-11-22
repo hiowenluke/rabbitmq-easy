@@ -4,6 +4,7 @@ const uuid = require('uuid');
 const connect = require('./connect');
 const lib = require('./__lib');
 
+const connections = connect.connections;
 const UNDEFINED = '__undefined__';
 
 const me = {
@@ -19,10 +20,7 @@ const me = {
 		const {host} = this;
 
 		try {
-			const connection = await amqp.connect(`amqp://${host}`);
-			console.info(`connect to RabbitMQ ${host} success`);
-
-			const channel = await connection.createChannel();
+			const channel = await connect.do(host, queue, {durable: false});
 
 			return new Promise(async (resolve) => {
 				const corrId = uuid();
@@ -41,11 +39,10 @@ const me = {
 				channel.sendToQueue(queue, Buffer.from(JSON.stringify(args)), {
 					correlationId: corrId, replyTo: q
 				});
-			});
+			})
 		}
 		catch(err) {
 			console.error(err);
-			connect.redo(host, queue);
 		}
 	},
 
@@ -53,13 +50,7 @@ const me = {
 		const {host} = this;
 
 		try {
-			const connection = await amqp.connect(`amqp://${host}`);
-			console.info(`connect to RabbitMQ ${host} success`);
-
-			process.once('SIGINT', () => { connection.close(); });
-
-			const channel = await connection.createChannel();
-			channel.assertQueue(queue, {durable: false});
+			const channel = await connect.do(host, queue, {durable: false});
 			channel.prefetch(1);
 
 			return channel.consume(queue, async (msg) => {
@@ -93,7 +84,6 @@ const me = {
 		}
 		catch(err) {
 			console.error(err);
-			connect.redo(host, queue);
 		}
 	}
 };
