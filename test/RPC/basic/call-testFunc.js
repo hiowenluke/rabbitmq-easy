@@ -1,5 +1,5 @@
 
-const RPC = require('../../src').RPC;
+const RPC = require('../../../src').RPC;
 const rpc = RPC();
 
 const main = async () => {
