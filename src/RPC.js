@@ -1,9 +1,29 @@
 
-const uuid = require('uuid');
+const ID = require('fast-id')(100000);
 const connect = require('./connect');
 const lib = require('./__lib');
 
 const UNDEFINED = '__undefined__';
+
+const tools = {
+	fixResult(result) {
+		const type = typeof result;
+		const invalidTypes = ['function', 'date'];
+
+		if (type === 'undefined') {
+			result = UNDEFINED;
+		}
+		else
+		if (invalidTypes.indexOf(type) >= 0) {
+			result = "{}";
+		}
+		else {
+			result = JSON.stringify(result);
+		}
+
+		return result;
+	}
+};
 
 const me = {
 	host: 'localhost',
@@ -21,17 +41,17 @@ const me = {
 			const channel = await connect.do(host, queue, {durable: false});
 			channel.sendToQueue(queue, Buffer.from(message));
 
-			channel.close();
-
 			return new Promise(async (resolve) => {
+				const timeStamp = new Date().getTime();
+				const q = 't';
+				const channel = await connect.do(host, q, {exclusive: true});
+
 				channel.consume(q, (msg) => {
 					const result = msg.content.toString();
 					resolve(result === UNDEFINED ? undefined : JSON.parse(result));
 				});
 
-				channel.sendToQueue(queue, Buffer.from(JSON.stringify(args)), {
-					correlationId: corrId, replyTo: q
-				});
+				channel.sendToQueue(queue, Buffer.from(JSON.stringify(args)), {durable: false});
 			})
 		}
 		catch(err) {
@@ -50,20 +70,7 @@ const me = {
 				const args = JSON.parse(message);
 
 				let result = await handler(...args);
-
-				const type = typeof result;
-				const invalidTypes = ['function', 'date'];
-
-				if (type === 'undefined') {
-					result = UNDEFINED;
-				}
-				else
-				if (invalidTypes.indexOf(type) >= 0) {
-					result = "{}";
-				}
-				else {
-					result = JSON.stringify(result);
-				}
+				result = tools.fixResult(result);
 
 				channel.sendToQueue(
 					msg.properties.replyTo,
