@@ -8,7 +8,7 @@ const handler = async (a1, a2) => {
 };
 
 const main = async () => {
-	await rpc.listen('testFunc', handler);
+	await rpc.listen('testFunc3', handler);
 };
 
 main();

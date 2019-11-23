@@ -1,5 +1,6 @@
 
 const RPC = require('../../../src').RPC;
+// const RPC = require('../../../src').RPC_low_perf;
 const rpc = RPC();
 
 const handler = async (index) => {
@@ -7,7 +8,7 @@ const handler = async (index) => {
 };
 
 const main = async () => {
-	await rpc.listen('testFunc', handler);
+	await rpc.listen('testFuncx', handler);
 };
 
 main();
