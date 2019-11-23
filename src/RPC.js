@@ -1,12 +1,12 @@
 
-const ID = require('fast-id')(100000);
+const ID = require('fast-id')(1000000);
 const connect = require('./connect');
 const lib = require('./__lib');
 
 const UNDEFINED = '__undefined__';
 
 const tools = {
-	fixResult(result) {
+	toJsonStr(result) {
 		const type = typeof result;
 		const invalidTypes = ['function', 'date'];
 
@@ -39,19 +39,20 @@ const me = {
 
 		try {
 			const channel = await connect.do(host, queue, {durable: false});
-			channel.sendToQueue(queue, Buffer.from(message));
 
 			return new Promise(async (resolve) => {
-				const timeStamp = new Date().getTime();
-				const q = 't';
-				const channel = await connect.do(host, q, {exclusive: true});
+				const id = ID();
+				const q = queue + '_result_' + id;
 
-				channel.consume(q, (msg) => {
+				const ch = await connect.do(host, q);
+				ch.consume(q, (msg) => {
+					// ch.close();
+
 					const result = msg.content.toString();
 					resolve(result === UNDEFINED ? undefined : JSON.parse(result));
 				});
 
-				channel.sendToQueue(queue, Buffer.from(JSON.stringify(args)), {durable: false});
+				channel.sendToQueue(queue, Buffer.from(q + '##' + JSON.stringify(args)));
 			})
 		}
 		catch(err) {
@@ -65,18 +66,18 @@ const me = {
 		try {
 			const channel = await connect.do(host, queue, {durable: false});
 
-			return channel.consume(queue, async (msg) => {
-				const message = msg.content.toString();
+			channel.consume(queue, async (msg) => {
+				let message = msg.content.toString();
+				// console.log(message);
+
+				const q = message.match(/^(.*?)##/)[1];
+				message = message.substr(q.length + 2);
+
 				const args = JSON.parse(message);
+				const result = await handler(...args);
 
-				let result = await handler(...args);
-				result = tools.fixResult(result);
-
-				channel.sendToQueue(
-					msg.properties.replyTo,
-					Buffer.from(result),
-					{correlationId: msg.properties.correlationId}
-				);
+				const resultStr = tools.toJsonStr(result);
+				channel.sendToQueue(q, Buffer.from(resultStr));
 
 				channel.ack(msg);
 			});
