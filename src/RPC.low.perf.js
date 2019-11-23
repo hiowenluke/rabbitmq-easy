@@ -5,6 +5,26 @@ const lib = require('./__lib');
 
 const UNDEFINED = '__undefined__';
 
+const tools = {
+	fixResult(result) {
+		const type = typeof result;
+		const invalidTypes = ['function', 'date'];
+
+		if (type === 'undefined') {
+			result = UNDEFINED;
+		}
+		else
+		if (invalidTypes.indexOf(type) >= 0) {
+			result = "{}";
+		}
+		else {
+			result = JSON.stringify(result);
+		}
+
+		return result;
+	}
+};
+
 const me = {
 	host: 'localhost',
 	queue: 'rpc-default',
@@ -56,20 +76,7 @@ const me = {
 				const args = JSON.parse(message);
 
 				let result = await handler(...args);
-
-				const type = typeof result;
-				const invalidTypes = ['function', 'date'];
-
-				if (type === 'undefined') {
-					result = UNDEFINED;
-				}
-				else
-				if (invalidTypes.indexOf(type) >= 0) {
-					result = "{}";
-				}
-				else {
-					result = JSON.stringify(result);
-				}
+				result = tools.fixResult(result);
 
 				channel.sendToQueue(
 					msg.properties.replyTo,
