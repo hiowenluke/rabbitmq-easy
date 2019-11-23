@@ -11,6 +11,20 @@
   "license": "MIT",
   "dependencies": {
     "amqplib": "^0.5.5",
+    "benchmark-easy": "^0.1.3",
+    "fast-id": "^0.1.0",
     "uuid": "^3.3.3"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiowenluke/rabbitmq-easy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hiowenluke/rabbitmq-easy/issues"
+  },
+  "homepage": "https://github.com/hiowenluke/rabbitmq-easy#readme"
 }
