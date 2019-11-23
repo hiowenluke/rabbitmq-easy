@@ -1,10 +1,8 @@
 
-const amqp = require("amqplib");
 const uuid = require('uuid');
 const connect = require('./connect');
 const lib = require('./__lib');
 
-const connections = connect.connections;
 const UNDEFINED = '__undefined__';
 
 const me = {
