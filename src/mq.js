@@ -38,7 +38,6 @@ const me = {
 		try {
 			const channel = await connect.do(host, queue, {durable: false});
 			channel.sendToQueue(queue, Buffer.from(message), {persistent: true});
-			channel.close();
 		}
 		catch(err) {
 			console.error(err);
