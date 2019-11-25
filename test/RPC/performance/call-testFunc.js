@@ -4,7 +4,7 @@ const RPC = require('../../../src').RPC;
 const rpc = RPC();
 
 const main = async (count) => {
-	const result = await rpc.call('testFunc-ok1', count);
+	const result = await rpc.call('testFunc', count);
 	// console.log(count, result);
 };
 
