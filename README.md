@@ -1,20 +1,16 @@
 
-# RabbitMQ Easy
+# RabbitMQ-Easy
 
-An easy to use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC (simpler then gRPC, consul, etc.).
+An easy to use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC. RabbitMQ-Easy RPC is simpler then gRPC, consul, etc., but its performance is lower than them. If you care about performance deeply,  use gRPC or consul.
 
 
-## Install
+## Installation 
 
-```bash
-npm install rabbitmq-easy --save
-```
+**1. Install Docker (If not yet)**
 
-## Quick Start
+Please "[Install Docker](https://docs.docker.com/v17.09/engine/installation/#supported-platforms)" first (Docker CE recommended).
 
-### Install RabbitMQ With Docker
-
-Please "[Install Docker](https://docs.docker.com/v17.09/engine/installation/#supported-platforms)" first (**Docker CE** recommended). Then do the following.
+**2. Install RabbitMQ in Docker (If not yet)**
 
 ```bash
 ## Install RabbitMQ 
@@ -24,12 +20,15 @@ docker pull rabbitmq:management
 docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
 ```
 
-Login to Management of RabbitMQ:
-1. Visit `http://localhost:15672/` in your browser.
-2. Username/password: `guest/guest`.
+**3. Install RabbitMQ-Easy**
 
+```bash
+npm install rabbitmq-easy --save
+```
 
-### Use as MQ
+## MQ
+
+### 1. Basic
 
 **receive.js**
 
@@ -66,37 +65,96 @@ const main = async () => {
 main();
 ```
 
-### Use as RPC
+### 2. Default Queue
 
-**server.js**
+**receive.js**
 
 ```js
-const RPC = require('rabbitmq-easy').RPC;
-const rpc = RPC();
+const mq = require('rabbitmq-easy').MQ();
 
-const handler = async (a1, a2) => {
-    console.log(a1, a2); // hello world
-    return {a: 1};
+const handler = async (message) => {
+	console.log(message);
 };
 
 const main = async () => {
-    
-    // If the "testFunc" is requested, then let handler to process it
-    await rpc.listen('testFunc', handler);
+	await mq.receive(handler);
 };
 
 main();
 ```
 
-**client.js**
+**send.js**
 
 ```js
-const RPC = require('rabbitmq-easy').RPC;
-const rpc = RPC();
+const mq = require('rabbitmq-easy').MQ();
 
 const main = async () => {
-    
-    // The "testFunc" is function name, the others are arguments passed to function "testFunc"
+	await mq.send('hello world');
+};
+
+main();
+```
+
+### 3. Multiple Queues
+
+**receive.js**
+
+```js
+const mq = require('rabbitmq-easy').MQ();
+
+const handler1 = async (message) => {
+	console.log('[1]', message);
+};
+
+const handler2 = async (message) => {
+	console.log('[2]', message);
+};
+
+const main = async () => {
+	await mq.receive('qx1', handler1);
+	await mq.receive('qx2', handler2);
+};
+
+main();
+```
+
+**send.js**
+
+```js
+const mq = require('rabbitmq-easy').MQ();
+
+const main = async () => {
+	await mq.send('qx1', 'hi qx1');
+	await mq.send('qx2', 'hi qx2');
+};
+
+main();
+```
+
+## RPC
+
+**testFunc.js**
+
+```js
+const rpc = require('rabbitmq-easy').RPC();
+
+const handler = async (index) => {
+	return index;
+};
+
+const main = async () => {
+	await rpc.listen('testFunc', handler);
+};
+
+main();
+```
+
+**call-testFunc.js**
+
+```js
+const rpc = require('rabbitmq-easy').RPC();
+
+const main = async () => {    
     const result = await rpc.call('testFunc', 'hello', 'world');
     console.log(result); // {a: 1}
 };
