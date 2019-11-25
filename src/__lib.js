@@ -25,7 +25,7 @@ const me = {
 		}
 
 		const inst = Object.create(obj);
-		inst.init(queue, host, options);
+		inst.init && inst.init(queue, host, options);
 		return inst;
 	}
 };
