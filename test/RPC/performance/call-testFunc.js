@@ -1,12 +1,12 @@
 
 const be = require('benchmark-easy')();
 const RPC = require('../../../src').RPC;
-// const RPC = require('../../../src').RPC_low_perf;
 const rpc = RPC();
 
 const main = async (count) => {
-	const result = await rpc.call('testFuncx', count);
+	const result = await rpc.call('testFunc-ok1', count);
 	// console.log(count, result);
 };
 
-be.start(main, 100);
+// about 20 seconds, avg 300 ops/sec
+be.start(main, 10000);
