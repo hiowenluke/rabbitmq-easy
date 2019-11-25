@@ -1,5 +1,7 @@
 
-const ID = require('fast-id')(1000000);
+const events = require('events');
+const emitter = new events.EventEmitter();
+
 const connect = require('./connect');
 const lib = require('./__lib');
 
@@ -22,38 +24,68 @@ const tools = {
 		}
 
 		return result;
+	},
+
+	parseMessage(message) {
+		const requestId = message.match(/^(.*?)#/)[1];
+		message = message.substr(requestId.length + 1);
+		return [requestId, message];
 	}
 };
 
 const me = {
 	host: 'localhost',
-	queue: 'rpc-default',
+	transfers: {},
+	requestIds: {},
 
-	init(queue, host) {
-		this.queue = queue || this.queue;
+	init(host) {
 		this.host = host || this.host;
+	},
+
+	async createTransfer(queue) {
+		const {host} = this;
+
+		const chForResult = await connect.do(host, queue + '_result', {durable: false});
+		chForResult.consume(queue + '_result', async (msg) => {
+			let message = msg.content.toString();
+			chForResult.ack(msg);
+
+			let requestId;
+			([requestId, message] = tools.parseMessage(message));
+
+			const result = JSON.parse(message);
+			emitter.emit(queue + requestId, result);
+		});
+	},
+
+	getRequestId(queue) {
+		if (!this.requestIds[queue]) {
+			this.requestIds[queue] = 1;
+		}
+		else {
+			this.requestIds[queue] ++;
+		}
+		return this.requestIds[queue];
 	},
 
 	async call(queue, ...args) {
 		const {host} = this;
+		const requestId = this.getRequestId(queue);
+
+		if (!this.transfers[queue]) {
+			this.transfers[queue] = 1;
+			await this.createTransfer(queue);
+		}
 
 		try {
 			const channel = await connect.do(host, queue, {durable: false});
+			channel.sendToQueue(queue, Buffer.from(requestId + '#' + JSON.stringify(args)));
 
-			return new Promise(async (resolve) => {
-				const id = ID();
-				const q = queue + '_result_' + id;
-
-				const ch = await connect.do(host, q);
-				ch.consume(q, (msg) => {
-					// ch.close();
-
-					const result = msg.content.toString();
-					resolve(result === UNDEFINED ? undefined : JSON.parse(result));
+			return new Promise(async resolve => {
+				emitter.once(queue + requestId, (result) => {
+					resolve(result);
 				});
-
-				channel.sendToQueue(queue, Buffer.from(q + '##' + JSON.stringify(args)));
-			})
+			});
 		}
 		catch(err) {
 			console.error(err);
@@ -65,21 +97,18 @@ const me = {
 
 		try {
 			const channel = await connect.do(host, queue, {durable: false});
-
 			channel.consume(queue, async (msg) => {
 				let message = msg.content.toString();
-				// console.log(message);
+				channel.ack(msg);
 
-				const q = message.match(/^(.*?)##/)[1];
-				message = message.substr(q.length + 2);
+				let requestId;
+				([requestId, message] = tools.parseMessage(message));
 
 				const args = JSON.parse(message);
 				const result = await handler(...args);
 
 				const resultStr = tools.toJsonStr(result);
-				channel.sendToQueue(q, Buffer.from(resultStr));
-
-				channel.ack(msg);
+				channel.sendToQueue(queue + '_result', Buffer.from(requestId + '#' + resultStr));
 			});
 		}
 		catch(err) {
