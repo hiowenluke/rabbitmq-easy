@@ -142,6 +142,8 @@ const handler = async (index) => {
 };
 
 const main = async () => {
+	
+	// The testFunc is function name
 	await rpc.listen('testFunc', handler);
 };
 
@@ -154,6 +156,8 @@ main();
 const rpc = require('rabbitmq-easy').RPC();
 
 const main = async () => {    
+
+	// The called function name must be match with in testFunc.js
     const result = await rpc.call('testFunc', 'hello', 'world');
     console.log(result); // {a: 1}
 };
