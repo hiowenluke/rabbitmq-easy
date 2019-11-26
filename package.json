@@ -13,9 +13,6 @@
     "amqplib": "^0.5.5",
     "benchmark-easy": "^0.1.4"
   },
-  "directories": {
-    "test": "test"
-  },
   "devDependencies": {},
   "repository": {
     "type": "git",
