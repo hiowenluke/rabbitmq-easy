@@ -89,6 +89,7 @@ const me = {
 		}
 		catch(err) {
 			console.error(err);
+			connect.redo(host, queue);
 		}
 	},
 
@@ -113,6 +114,7 @@ const me = {
 		}
 		catch(err) {
 			console.error(err);
+			connect.redo(host, queue);
 		}
 	}
 };
