@@ -45,7 +45,7 @@ const me = {
 	async createTransfer(queue) {
 		const {host} = this;
 
-		const chForResult = await connect.do(host, queue + '_result', {durable: false});
+		const chForResult = await connect.do(host, queue + '_result', {durable: true});
 		chForResult.consume(queue + '_result', async (msg) => {
 			let message = msg.content.toString();
 			chForResult.ack(msg);
@@ -78,8 +78,8 @@ const me = {
 		}
 
 		try {
-			const channel = await connect.do(host, queue, {durable: false});
-			channel.sendToQueue(queue, Buffer.from(requestId + '#' + JSON.stringify(args)));
+			const channel = await connect.do(host, queue, {durable: true});
+			channel.sendToQueue(queue, Buffer.from(requestId + '#' + JSON.stringify(args)), {persistent: true});
 
 			return new Promise(async resolve => {
 				emitter.once(queue + requestId, (result) => {
@@ -96,7 +96,7 @@ const me = {
 		const {host} = this;
 
 		try {
-			const channel = await connect.do(host, queue, {durable: false});
+			const channel = await connect.do(host, queue, {durable: true});
 			channel.consume(queue, async (msg) => {
 				let message = msg.content.toString();
 				channel.ack(msg);
@@ -108,7 +108,7 @@ const me = {
 				const result = await handler(...args);
 
 				const resultStr = tools.toJsonStr(result);
-				channel.sendToQueue(queue + '_result', Buffer.from(requestId + '#' + resultStr));
+				channel.sendToQueue(queue + '_result', Buffer.from(requestId + '#' + resultStr), {persistent: true});
 			});
 		}
 		catch(err) {
