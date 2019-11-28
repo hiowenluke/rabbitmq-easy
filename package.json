@@ -1,7 +1,7 @@
 {
   "name": "rabbitmq-easy",
   "version": "0.3.6",
-  "description": "An easy to use RabbitMQ library for Node.js",
+  "description": "An easy-to-use RabbitMQ library for Node.js, support MQ and RPC. RabbitMQ-Easy RPC is simpler than gRPC, consul, etc.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
