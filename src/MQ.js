@@ -1,6 +1,5 @@
 
 const connect = require('./connect');
-const lib = require('./__lib');
 
 const me = {
 	host: 'localhost',
@@ -64,7 +63,9 @@ const me = {
 };
 
 const create = (...args) => {
-	return lib.create(me, ...args);
+	const inst = Object.create(me);
+	inst.init && inst.init(...args);
+	return inst;
 };
 
 module.exports = create;
