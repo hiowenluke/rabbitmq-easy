@@ -1,7 +1,6 @@
 
 const uuid = require('uuid');
 const connect = require('./connect');
-const lib = require('./__lib');
 
 const UNDEFINED = '__undefined__';
 
@@ -94,7 +93,9 @@ const me = {
 };
 
 const create = (...args) => {
-	return lib.create(me, ...args);
+	const inst = Object.create(me);
+	inst.init && inst.init(...args);
+	return inst;
 };
 
 module.exports = create;
