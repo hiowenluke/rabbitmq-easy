@@ -97,6 +97,10 @@ const me = {
 		try {
 			// Set options.isReCreate as true to remove queue created before
 			const channel = await connect.do(host, queue, {durable: true, isReCreate: true});
+
+			// Delete the queue for result created before
+			channel.deleteQueue(queue + '_result');
+
 			channel.consume(queue, async (msg) => {
 				let message = msg.content.toString();
 				channel.ack(msg);
