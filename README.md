@@ -3,23 +3,18 @@
 
 An easy to use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC. RabbitMQ-Easy RPC is simpler then gRPC, consul, etc.
 
-## Installation 
-
-**1. Install Docker (If not yet)**
-
-Please "[Install Docker](https://docs.docker.com/v17.09/engine/installation/#supported-platforms)" first (Docker CE recommended). [What's Docker](https://www.docker.com/).
-
-**2. Install RabbitMQ in Docker (If not yet)**
-
-```bash
 ## Install RabbitMQ 
-docker pull rabbitmq:management
 
-## Start RabbitMQ
-docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
-```
+Deploy RabbitMQ to a docker container:
 
-**3. Install RabbitMQ-Easy**
+1. [Install Docker](https://docs.docker.com/v17.09/engine/installation/#supported-platforms) (Docker CE recommended)
+
+2. Install RabbitMQ: `docker pull rabbitmq:management`
+3. Start RabbitMQ: `docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management`
+4. Login to RabbitMQ management web page: `http://localhost:15672/` (guest/guest)
+
+
+## Install RabbitMQ-Easy
 
 ```bash
 npm install rabbitmq-easy --save
@@ -34,7 +29,10 @@ npm install rabbitmq-easy --save
 ```js
 const MQ = require('rabbitmq-easy').MQ;
 const queue = 'q1'; // Name queue as "q1"
-const mq = MQ(queue); // Create a message queue
+
+// The options.host is RabbitMQ host
+// It can be omitted if it is "localhost"
+const mq = MQ(queue, {host: 'localhost'}); // Create a message queue
 
 // Handle the message comes from queue "q1"
 const handler = async (message) => {
@@ -54,7 +52,7 @@ main();
 ```js
 const MQ = require('rabbitmq-easy').MQ;
 const queue = 'q1'; // Name queue as "q1"
-const mq = MQ(queue); // Create a message queue
+const mq = MQ(queue, {host: 'localhost'}); // Create a message queue
 
 const main = async () => {
     // Send a message to queue "q1" in RabbitMQ
@@ -135,7 +133,9 @@ main();
 **testFunc.js**
 
 ```js
-const rpc = require('rabbitmq-easy').RPC();
+// The options.host is RabbitMQ host
+// It can be omitted if it is "localhost"
+const rpc = require('rabbitmq-easy').RPC({host: 'localhost'});
 
 const handler = async (index) => {
 	return index;
