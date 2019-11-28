@@ -38,7 +38,7 @@ const me = {
 	transfers: {},
 	requestIds: {},
 
-	init(host) {
+	init({host} = {}) {
 		this.host = host || this.host;
 	},
 

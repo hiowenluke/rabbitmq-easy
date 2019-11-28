@@ -6,7 +6,7 @@ const me = {
 	host: 'localhost',
 	queue: 'mq-default',
 
-	init(queue, host) {
+	init(queue, {host} = {}) {
 		this.queue = queue || this.queue;
 		this.host = host || this.host;
 	},
