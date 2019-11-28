@@ -167,6 +167,10 @@ const main = async () => {
 main();
 ```
 
+## Examples
+
+See [examples](./examples) to learn more.
+
 ## License
 
 [MIT](LICENSE)
