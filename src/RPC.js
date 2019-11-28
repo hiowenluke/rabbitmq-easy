@@ -95,7 +95,8 @@ const me = {
 		const {host} = this;
 
 		try {
-			const channel = await connect.do(host, queue, {durable: true});
+			// Set options.isReCreate as true to remove queue before created
+			const channel = await connect.do(host, queue, {durable: true, isReCreate: true});
 			channel.consume(queue, async (msg) => {
 				let message = msg.content.toString();
 				channel.ack(msg);

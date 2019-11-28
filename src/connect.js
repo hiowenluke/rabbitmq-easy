@@ -8,7 +8,7 @@ const channels = {
 	async fetch(connection, host, queue, options) {
 		const key = host + '|' + queue;
 
-		if (!this.data[key]) {
+		if (options.isReCreate || !this.data[key]) {
 			this.data[key] = await this.create(connection, queue, options);
 		}
 
@@ -17,6 +17,11 @@ const channels = {
 
 	async create(connection, queue, options) {
 		const channel = await connection.createChannel();
+
+		if (options.isReCreate) {
+			await channel.deleteQueue(queue);
+		}
+
 		await channel.assertQueue(queue, options);
 		return channel;
 	}
