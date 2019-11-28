@@ -9,5 +9,5 @@ const main = async (count) => {
 	await mq.send(`hi ${count}`);
 };
 
-// about 10 - 20 seconds, avg 61098 ops/sec
+// 1000000 times, 9.325 seconds, 107238/s
 be.start(main, 1000000);
