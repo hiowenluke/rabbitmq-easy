@@ -1,7 +1,7 @@
 
 # RabbitMQ-Easy
 
-An easy-to-use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC. RabbitMQ-Easy RPC is simpler then gRPC, consul, etc.
+An easy-to-use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC. RabbitMQ-Easy RPC is simpler than gRPC, consul, etc.
 
 ## Install RabbitMQ 
 
