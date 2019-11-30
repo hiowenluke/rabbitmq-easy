@@ -1,6 +1,6 @@
 {
   "name": "rabbitmq-easy",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "An easy-to-use RabbitMQ library for Node.js, support MQ and RPC. RabbitMQ-Easy RPC is simpler than gRPC, consul, etc.",
   "main": "index.js",
   "scripts": {
