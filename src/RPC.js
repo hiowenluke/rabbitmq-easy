@@ -102,6 +102,11 @@ const me = {
 			channel.deleteQueue(queue + '_result');
 
 			channel.consume(queue, async (msg) => {
+
+				// When there are multiple listens processing the same queue,
+				// only one listen will receive msg, and other listens will receive msg empty.
+				if (!msg) return;
+
 				let message = msg.content.toString();
 				channel.ack(msg);
 
