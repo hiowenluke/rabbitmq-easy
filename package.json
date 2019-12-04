@@ -4,7 +4,7 @@
   "description": "An easy-to-use RabbitMQ library for Node.js, support MQ and RPC. RabbitMQ-Easy RPC is simpler than gRPC, consul, etc.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd test && mocha . --recursive --exit"
   },
   "keywords": [],
   "author": "hi.owen.luke@gmail.com",
@@ -13,7 +13,11 @@
     "amqplib": "^0.5.5",
     "benchmark-easy": "^0.1.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "caller": "^1.0.1",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hiowenluke/rabbitmq-easy.git"
