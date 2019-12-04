@@ -5,13 +5,10 @@ An easy-to-use RabbitMQ library for [Node.js](https://nodejs.org), support MQ an
 
 ## Server Environment
 
-Deploy RabbitMQ to a docker container:
-
 1. [Install Docker](https://docs.docker.com/v17.09/engine/installation/#supported-platforms) (Docker CE recommended)
 2. Install RabbitMQ: `docker pull rabbitmq:management`
 3. Start RabbitMQ: `docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management`
 4. Login to RabbitMQ management web page: `http://localhost:15672/` (guest/guest)
-
 
 ## Installation
 
@@ -209,8 +206,8 @@ See [examples](./examples) to learn more.
 
 ## Benchmark
 
-1\. `cd ./benchmark`
-2\. `node receive.js`
+1\. Run: `cd ./benchmark`
+2\. Run: `node receive.js`
 3\. Open a new tab in terminal, then run: `node send.js`
 
 The result will be like below:
