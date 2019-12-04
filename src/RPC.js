@@ -3,15 +3,16 @@ const events = require('events');
 const emitter = new events.EventEmitter();
 
 const connect = require('./connect');
-const UNDEFINED = '__undefined__';
 
-const tools = {
-	toJsonStr(result) {
+const myJson = {
+	UNDEFINED: '__undefined__',
+
+	stringify(result) {
 		const type = typeof result;
 		const invalidTypes = ['function', 'date'];
 
 		if (type === 'undefined') {
-			result = UNDEFINED;
+			result = this.UNDEFINED;
 		}
 		else
 		if (invalidTypes.indexOf(type) >= 0) {
@@ -24,6 +25,17 @@ const tools = {
 		return result;
 	},
 
+	parse(message) {
+		if (message === this.UNDEFINED) {
+			return undefined;
+		}
+		else {
+			return JSON.parse(message);
+		}
+	}
+};
+
+const tools = {
 	parseMessage(message) {
 		const requestId = message.match(/^(.*?)#/)[1];
 		message = message.substr(requestId.length + 1);
@@ -45,13 +57,15 @@ const me = {
 
 		const chForResult = await connect.do(host, queue + '_result', {durable: true});
 		chForResult.consume(queue + '_result', async (msg) => {
+			if (!msg) return;
+
 			let message = msg.content.toString();
 			chForResult.ack(msg);
 
 			let requestId;
 			([requestId, message] = tools.parseMessage(message));
 
-			const result = JSON.parse(message);
+			const result = myJson.parse(message);
 			emitter.emit(queue + requestId, result);
 		});
 	},
@@ -116,7 +130,7 @@ const me = {
 				const args = JSON.parse(message);
 				const result = await handler(...args);
 
-				const resultStr = tools.toJsonStr(result);
+				const resultStr = myJson.stringify(result);
 				channel.sendToQueue(queue + '_result', Buffer.from(requestId + '#' + resultStr), {persistent: true});
 			});
 		}
