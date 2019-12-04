@@ -1,7 +1,7 @@
 
-const MQ = require('../../../src').MQ;
+const MQ = require('../src').MQ;
 
-const queue = 'q2';
+const queue = 'queue_benchmark';
 const mq = MQ(queue);
 
 const handler = async (message) => {
