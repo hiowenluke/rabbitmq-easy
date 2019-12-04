@@ -3,7 +3,7 @@
 
 An easy-to-use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC. RabbitMQ-Easy RPC is simpler than gRPC, consul, etc.
 
-## Install RabbitMQ 
+## Server Environment
 
 Deploy RabbitMQ to a docker container:
 
@@ -13,13 +13,22 @@ Deploy RabbitMQ to a docker container:
 4. Login to RabbitMQ management web page: `http://localhost:15672/` (guest/guest)
 
 
-## Install RabbitMQ-Easy
+## Installation
 
 ```bash
 npm install rabbitmq-easy --save
 ```
 
-## MQ
+## Test
+
+```sh
+git clone https://github.com/hiowenluke/rabbitmq-easy.git
+cd rabbitmq-easy
+npm install
+npm test
+```
+
+## Usage of MQ
 
 ### 1. Basic
 
@@ -28,10 +37,7 @@ npm install rabbitmq-easy --save
 ```js
 const MQ = require('rabbitmq-easy').MQ;
 const queue = 'q1'; // Name queue as "q1"
-
-// The options.host is RabbitMQ host
-// It can be omitted if it is "localhost"
-const mq = MQ(queue, {host: 'localhost'}); // Create a message queue
+const mq = MQ(queue); // Create a message queue
 
 // Handle the message comes from queue "q1"
 const handler = async (message) => {
@@ -51,9 +57,7 @@ main();
 ```js
 const MQ = require('rabbitmq-easy').MQ;
 const queue = 'q1'; // Name queue as "q1"
-
-// The options must be as same as it in receive.js
-const mq = MQ(queue, {host: 'localhost'}); // Create a message queue
+const mq = MQ(queue); // Create a message queue
 
 const main = async () => {
     // Send a message to queue "q1" in RabbitMQ
@@ -129,17 +133,33 @@ const main = async () => {
 main();
 ```
 
-## RPC
+### 4. Options
+
+```js
+const MQ = require('rabbitmq-easy').MQ;
+
+// The options can be omitted if options.rabbitMQ.host is 'localhost'
+const options = {
+    rabbitMQ: {
+        host: 'localhost' 
+    }
+};
+
+const mq = MQ('queueName', options);
+...
+```
+
+## Usage of RPC
+
+### 1. call remote functions
 
 **testFunc.js**
 
 ```js
-// The options.host is RabbitMQ host
-// It can be omitted if it is "localhost"
-const rpc = require('rabbitmq-easy').RPC({host: 'localhost'});
+const rpc = require('rabbitmq-easy').RPC();
 
-const handler = async (index) => {
-    return index;
+const handler = async (a1, a2) => {
+    return `${a1} ${a2}`;
 };
 
 const main = async () => {
@@ -154,22 +174,49 @@ main();
 **call-testFunc.js**
 
 ```js
-// The options must be as same as it in testFunc.js
-const rpc = require('rabbitmq-easy').RPC({host: 'localhost'});
+const rpc = require('rabbitmq-easy').RPC();
 
 const main = async () => {    
 
     // The called function name must be match with in testFunc.js
     const result = await rpc.call('testFunc', 'hello', 'world');
-    console.log(result); // {a: 1}
+    console.log(result); // 'hello world'
 };
 
 main();
 ```
 
+### 2. Options
+
+```js
+const RPC = require('rabbitmq-easy').RPC;
+
+// The options can be omitted if options.rabbitMQ.host is 'localhost'
+const options = {
+    rabbitMQ: {
+        host: 'localhost' 
+    }
+};
+
+const rpc = RPC(options);
+...
+```
+
+
 ## Examples
 
 See [examples](./examples) to learn more.
+
+## Benchmark
+
+1\. `cd ./benchmark`
+2\. `node receive.js`
+3\. Open a new tab in terminal, then run: `node send.js`
+
+The result will be like below:
+```
+Done. 1000000 times, 9.623 seconds, 103917/s
+```
 
 ## License
 
