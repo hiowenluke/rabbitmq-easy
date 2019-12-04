@@ -3,14 +3,14 @@ const expect = require('chai').expect;
 const wait = require('../../__lib/wait');
 const exec = require('../../__lib/exec');
 
-describe('RPC', () => {
+describe('RPC - basic', () => {
 
 	before(async () => {
 		exec('server.js');
 		await wait(100);
 	});
 
-	it('basic', async () => {
+	it('', async () => {
 		const RPC = require('../../../src').RPC;
 		const rpc = RPC();
 

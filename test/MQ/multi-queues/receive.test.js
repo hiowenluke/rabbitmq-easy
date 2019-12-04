@@ -6,7 +6,7 @@ const exec = require('../../__lib/exec');
 const MQ = require('../../../src').MQ;
 const mq = MQ();
 
-describe('MQ', () => {
+describe('MQ - multi queues', () => {
 
 	before(async () => {
 		setTimeout(() => {
@@ -14,7 +14,7 @@ describe('MQ', () => {
 		}, 200);
 	});
 
-	it('multi queues', async () => {
+	it('', async () => {
 		const p1 = new Promise(async resolve => {
 			await mq.receive('qx1', async (message) => {
 				resolve(message === 'hi qx1');

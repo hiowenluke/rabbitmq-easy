@@ -7,7 +7,7 @@ const MQ = require('../../../src').MQ;
 const queue = 'test_basic_queue';
 const mq = MQ(queue);
 
-describe('MQ', () => {
+describe('MQ - basic', () => {
 
 	before(async () => {
 		setTimeout(() => {
@@ -15,7 +15,7 @@ describe('MQ', () => {
 		}, 200);
 	});
 
-	it('basic', async () => {
+	it('', async () => {
 		const test = async () => {
 			return new Promise(async resolve => {
 				await mq.receive(async (message) => {

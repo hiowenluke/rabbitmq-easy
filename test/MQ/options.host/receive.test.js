@@ -4,9 +4,9 @@ const wait = require('../../__lib/wait');
 const exec = require('../../__lib/exec');
 
 const MQ = require('../../../src').MQ;
-const mq = MQ();
+const mq = MQ({rabbitMQ: {host: '127.0.0.1'}});
 
-describe('MQ - default queue', () => {
+describe('MQ - options.host', () => {
 
 	before(async () => {
 		setTimeout(() => {
