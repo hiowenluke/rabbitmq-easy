@@ -44,16 +44,19 @@ const tools = {
 };
 
 const me = {
-	host: 'localhost',
+	rabbitMQ: {
+		host: 'localhost',
+	},
+
 	transfers: {},
 	requestIds: {},
 
-	init({host} = {}) {
-		this.host = host || this.host;
+	init(options = {}) {
+		Object.assign(this.rabbitMQ, options.rabbitMQ);
 	},
 
 	async createTransfer(queue) {
-		const {host} = this;
+		const {host} = this.rabbitMQ;
 
 		const chForResult = await connect.do(host, queue + '_result', {durable: true});
 		chForResult.consume(queue + '_result', async (msg) => {
@@ -81,7 +84,7 @@ const me = {
 	},
 
 	async call(queue, ...args) {
-		const {host} = this;
+		const {host} = this.rabbitMQ;
 		const requestId = this.getRequestId(queue);
 
 		if (!this.transfers[queue]) {
@@ -106,7 +109,7 @@ const me = {
 	},
 
 	async listen(queue, handler) {
-		const {host} = this;
+		const {host} = this.rabbitMQ;
 
 		try {
 			// Set options.isReCreate as true to remove queue created before

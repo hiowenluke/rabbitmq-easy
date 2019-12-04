@@ -2,12 +2,20 @@
 const connect = require('./connect');
 
 const me = {
-	host: 'localhost',
+	rabbitMQ: {
+		host: 'localhost',
+	},
+
 	queue: 'mq-default',
 
-	init(queue, {host} = {}) {
-		this.queue = queue || this.queue;
-		this.host = host || this.host;
+	init(queue, options = {}) {
+		if (typeof queue === 'object') {
+			options = queue;
+			queue = null;
+		}
+
+		queue && (this.queue = queue);
+		Object.assign(this.rabbitMQ, options.rabbitMQ);
 	},
 
 	parseArgs(queue, anotherArg) {
@@ -32,7 +40,7 @@ const me = {
 
 	async send(queue, message) {
 		([queue, message] = this.parseArgs(queue, message));
-		const {host} = this;
+		const {host} = this.rabbitMQ;
 
 		try {
 			const channel = await connect.do(host, queue, {durable: false});
@@ -46,7 +54,7 @@ const me = {
 
 	async receive(queue, handler) {
 		([queue, handler] = this.parseArgs(queue, handler));
-		const {host} = this;
+		const {host} = this.rabbitMQ;
 
 		try {
 			// Set options.isReCreate as true to remove queue created before
