@@ -206,13 +206,15 @@ See [examples](./examples) to learn more.
 
 ## Benchmark
 
-1\. Run: `cd ./benchmark`
-2\. Run: `node receive.js`
-3\. Open a new tab in terminal, then run: `node send.js`
-
-The result will be like below:
+Run
+```sh
+node ./benchmark/index.js
 ```
-Done. 1000000 times, 9.623 seconds, 103917/s
+
+Result
+```
+Benchmark [1000000] times starting...
+Done. 9.623 seconds, 103917 times/sec.
 ```
 
 ## License
