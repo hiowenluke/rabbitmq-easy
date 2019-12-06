@@ -204,19 +204,6 @@ const rpc = RPC(options);
 
 See [examples](./examples) to learn more.
 
-## Benchmark
-
-Run
-```sh
-node ./benchmark/index.js
-```
-
-Result
-```
-Benchmark [1000000] times starting...
-Done. 9.623 seconds, 103917 times/sec.
-```
-
 ## License
 
 [MIT](LICENSE)
