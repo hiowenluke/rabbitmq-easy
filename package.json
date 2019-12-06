@@ -11,12 +11,13 @@
   "license": "MIT",
   "dependencies": {
     "amqplib": "^0.5.5",
-    "benchmark-easy": "^0.1.4"
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "caller": "^1.0.1",
     "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "benchmark-easy": "^0.1.7"
   },
   "repository": {
     "type": "git",
