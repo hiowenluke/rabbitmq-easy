@@ -60,15 +60,15 @@ const connections = {
 };
 
 const connect = {
-	async do(host, queue, options) {
+	async do(host, queue, options = {}) {
 		const connection = await connections.fetch(host, queue);
 		const channel = await channels.fetch(connection, host, queue, options);
 		return channel;
 	},
 
-	redo(host, queue) {
+	redo(host, queue, options) {
 		setTimeout(async () => {
-			await this.do(host, queue);
+			await this.do(host, queue, options);
 		}, config.waitTime);
 	}
 };
