@@ -44,9 +44,10 @@ const me = {
 
 	async call(queue, ...args) {
 		const {host} = this.rabbitMQ;
+		const options = {durable: false};
 
 		try {
-			const channel = await connect.do(host, queue, {durable: false});
+			const channel = await connect.do(host, queue, options);
 
 			return new Promise(async (resolve) => {
 				const corrId = uuid();
@@ -75,9 +76,10 @@ const me = {
 
 	async listen(queue, handler) {
 		const {host} = this.rabbitMQ;
+		const options = {durable: false};
 
 		try {
-			const channel = await connect.do(host, queue, {durable: false});
+			const channel = await connect.do(host, queue, options);
 			channel.prefetch(1);
 
 			return channel.consume(queue, async (msg) => {
