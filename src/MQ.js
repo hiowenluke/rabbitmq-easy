@@ -41,24 +41,26 @@ const me = {
 	async send(queue, message) {
 		([queue, message] = this.parseArgs(queue, message));
 		const {host} = this.rabbitMQ;
+		const options = {durable: false};
 
 		try {
-			const channel = await connect.do(host, queue, {durable: false});
+			const channel = await connect.do(host, queue, options);
 			channel.sendToQueue(queue, Buffer.from(message), {persistent: true});
 		}
 		catch(err) {
 			console.error(err);
-			connect.redo(host, queue);
+			connect.redo(host, queue, options);
 		}
 	},
 
 	async receive(queue, handler) {
 		([queue, handler] = this.parseArgs(queue, handler));
 		const {host} = this.rabbitMQ;
+		const options = {durable: false, isReCreate: true};
 
 		try {
 			// Set options.isReCreate as true to remove queue created before
-			const channel = await connect.do(host, queue, {durable: false, isReCreate: true});
+			const channel = await connect.do(host, queue, options);
 			channel.consume(queue, async (msg) => {
 				if (!msg) return;
 				await handler(msg.content.toString());
@@ -67,7 +69,7 @@ const me = {
 		}
 		catch(err) {
 			console.error(err);
-			connect.redo(host, queue);
+			connect.redo(host, queue, options);
 		}
 	}
 };
