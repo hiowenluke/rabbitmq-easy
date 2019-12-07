@@ -61,9 +61,14 @@ const connections = {
 
 const connect = {
 	async do(host, queue, options = {}) {
-		const connection = await connections.fetch(host, queue);
-		const channel = await channels.fetch(connection, host, queue, options);
-		return channel;
+		try {
+			const connection = await connections.fetch(host, queue);
+			const channel = await channels.fetch(connection, host, queue, options);
+			return channel;
+		}
+		catch(e) {
+			console.log(e);
+		}
 	},
 
 	redo(host, queue, options) {
