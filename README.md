@@ -1,7 +1,7 @@
 
 # RabbitMQ-Easy
 
-An easy-to-use RabbitMQ library for [Node.js](https://nodejs.org), support MQ and RPC. RabbitMQ-Easy RPC is simpler than gRPC, consul, etc.
+An easy-to-use RabbitMQ library for [Node.js](https://nodejs.org), based on [AMQP.node](https://github.com/squaremo/amqp.node) (amqplib). RabbitMQ is a high-performance MQ.
 
 ## Server Environment
 
@@ -16,23 +16,14 @@ An easy-to-use RabbitMQ library for [Node.js](https://nodejs.org), support MQ an
 npm install rabbitmq-easy --save
 ```
 
-## Test
-
-```sh
-git clone https://github.com/hiowenluke/rabbitmq-easy.git
-cd rabbitmq-easy
-npm install
-npm test
-```
-
-## Usage of MQ
+## Usage
 
 ### 1. Basic
 
 **receive.js**
 
 ```js
-const MQ = require('rabbitmq-easy').MQ;
+const MQ = require('rabbitmq-easy');
 const queue = 'q1'; // Name queue as "q1"
 const mq = MQ(queue); // Create a message queue
 
@@ -52,7 +43,7 @@ main();
 **send.js**
 
 ```js
-const MQ = require('rabbitmq-easy').MQ;
+const MQ = require('rabbitmq-easy');
 const queue = 'q1'; // Name queue as "q1"
 const mq = MQ(queue); // Create a message queue
 
@@ -69,7 +60,7 @@ main();
 **receive.js**
 
 ```js
-const mq = require('rabbitmq-easy').MQ();
+const mq = require('rabbitmq-easy')();
 
 const handler = async (message) => {
     console.log(message);
@@ -85,7 +76,7 @@ main();
 **send.js**
 
 ```js
-const mq = require('rabbitmq-easy').MQ();
+const mq = require('rabbitmq-easy')();
 
 const main = async () => {
     await mq.send('hello world');
@@ -99,7 +90,7 @@ main();
 **receive.js**
 
 ```js
-const mq = require('rabbitmq-easy').MQ();
+const mq = require('rabbitmq-easy')();
 
 const handler1 = async (message) => {
     console.log('[1]', message);
@@ -120,7 +111,7 @@ main();
 **send.js**
 
 ```js
-const mq = require('rabbitmq-easy').MQ();
+const mq = require('rabbitmq-easy')();
 
 const main = async () => {
     await mq.send('qx1', 'hi qx1');
@@ -133,7 +124,7 @@ main();
 ### 4. Options
 
 ```js
-const MQ = require('rabbitmq-easy').MQ;
+const MQ = require('rabbitmq-easy');
 
 // The options can be omitted if options.rabbitMQ.host is 'localhost'
 const options = {
@@ -146,63 +137,18 @@ const mq = MQ('queueName', options);
 ...
 ```
 
-## Usage of RPC
-
-### 1. call remote functions
-
-**testFunc.js**
-
-```js
-const rpc = require('rabbitmq-easy').RPC();
-
-const handler = async (a1, a2) => {
-    return `${a1} ${a2}`;
-};
-
-const main = async () => {
-    
-    // The testFunc is function name
-    await rpc.listen('testFunc', handler);
-};
-
-main();
-```
-
-**call-testFunc.js**
-
-```js
-const rpc = require('rabbitmq-easy').RPC();
-
-const main = async () => {    
-
-    // The called function name must be match with in testFunc.js
-    const result = await rpc.call('testFunc', 'hello', 'world');
-    console.log(result); // 'hello world'
-};
-
-main();
-```
-
-### 2. Options
-
-```js
-const RPC = require('rabbitmq-easy').RPC;
-
-// The options can be omitted if options.rabbitMQ.host is 'localhost'
-const options = {
-    rabbitMQ: {
-        host: 'localhost' 
-    }
-};
-
-const rpc = RPC(options);
-...
-```
-
-
 ## Examples
 
 See [examples](./examples) to learn more.
+
+## Test
+
+```sh
+git clone https://github.com/hiowenluke/rabbitmq-easy.git
+cd rabbitmq-easy
+npm install
+npm test
+```
 
 ## License
 
