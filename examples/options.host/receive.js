@@ -1,5 +1,5 @@
 
-const MQ = require('../../../src').MQ;
+const MQ = require('../../src');
 
 const queue = 'q_host';
 const mq = MQ(queue, {rabbitMQ: {host: 'localhost'}});

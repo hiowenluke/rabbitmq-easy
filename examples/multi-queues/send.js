@@ -1,5 +1,5 @@
 
-const MQ = require('../../../src').MQ;
+const MQ = require('../../src');
 const mq = MQ();
 
 const main = async () => {
