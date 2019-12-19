@@ -1,12 +1,12 @@
 
 const expect = require('chai').expect;
-const wait = require('../../__lib/wait');
-const exec = require('../../__lib/exec');
+const wait = require('../__lib/wait');
+const exec = require('../__lib/exec');
 
-const MQ = require('../../../src').MQ;
+const MQ = require('../../src');
 const mq = MQ({rabbitMQ: {host: '127.0.0.1'}});
 
-describe('MQ - options.host', () => {
+describe('options.host', () => {
 
 	before(async () => {
 		setTimeout(() => {

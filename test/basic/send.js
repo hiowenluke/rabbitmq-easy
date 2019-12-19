@@ -1,5 +1,5 @@
 
-const MQ = require('../../../src').MQ;
+const MQ = require('../../src');
 const queue = 'test_basic_queue';
 const mq = MQ(queue);
 

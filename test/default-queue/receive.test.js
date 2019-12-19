@@ -1,13 +1,12 @@
 
 const expect = require('chai').expect;
-const wait = require('../../__lib/wait');
-const exec = require('../../__lib/exec');
+const wait = require('../__lib/wait');
+const exec = require('../__lib/exec');
 
-const MQ = require('../../../src').MQ;
-const queue = 'test_basic_queue';
-const mq = MQ(queue);
+const MQ = require('../../src');
+const mq = MQ();
 
-describe('MQ - basic', () => {
+describe('default queue', () => {
 
 	before(async () => {
 		setTimeout(() => {

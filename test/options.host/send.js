@@ -1,5 +1,5 @@
 
-const MQ = require('../../../src').MQ;
+const MQ = require('../../src');
 const mq = MQ({rabbitMQ: {host: '127.0.0.1'}});
 
 const main = async () => {
