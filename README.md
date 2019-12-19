@@ -150,6 +150,39 @@ npm install
 npm test
 ```
 
+## Performance
+
+Run benchmark
+```sh
+node ./benchmark/index.js
+```
+
+Results
+```sh
+Running scripts...
+Benchmarking [10000] times, [10] runs.
+Starting...
+Run #1: 0.243 seconds, 41152 times/sec
+Run #2: 0.089 seconds, 112359 times/sec
+Run #3: 0.098 seconds, 102040 times/sec
+Run #4: 0.099 seconds, 101010 times/sec
+Run #5: 0.086 seconds, 116279 times/sec
+Run #6: 0.085 seconds, 117647 times/sec
+Run #7: 0.105 seconds, 95238 times/sec
+Run #8: 0.118 seconds, 84745 times/sec
+Run #9: 0.092 seconds, 108695 times/sec
+Run #10: 0.08 seconds, 125000 times/sec
+Done.
+Average: 0.11 seconds, 100417 times/sec
+----------------------------------------
+Platform info:
+macOS Mojave 10.14 x64
+Intel(R) Core(TM) i7-4558U CPU @ 2.80GHz x 4
+Total Memory 16 GB
+Node.js v10.16.3
+V8 6.8.275.32-node.54
+```
+
 ## License
 
 [MIT](LICENSE)
